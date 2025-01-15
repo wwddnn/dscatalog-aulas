@@ -1,7 +1,9 @@
 package com.devsuperior.dscatalog.resources;
 
 import com.devsuperior.dscatalog.dto.CategoryDTO;
+import com.devsuperior.dscatalog.resources.exceptions.StandardError;
 import com.devsuperior.dscatalog.services.CategoryService;
+import com.devsuperior.dscatalog.services.exceptions.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+//enxugar sempre a lógica do controlador, ele tem que ser enxuto. colocar as excecoes na classe controllerAdvice
 
 @RestController
 @RequestMapping(value = "/categories")
