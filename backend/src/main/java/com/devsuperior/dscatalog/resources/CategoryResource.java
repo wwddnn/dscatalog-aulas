@@ -28,14 +28,14 @@ public class CategoryResource {
     @GetMapping(value = "/{id}")
     public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
         CategoryDTO dto = service.findById(id);
-        return ResponseEntity.ok().body(dto);
+        return ResponseEntity.ok().body(dto); //resposta 200
     }
 
     @PostMapping //para inserir um novo recurso, por padrao do Rest, usamos @PostMapping
     public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto) { //retorna no corpo a nova categoria inserida e retorna seu id tbm.
         dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
-        return ResponseEntity.created(uri).body(dto);
+        return ResponseEntity.created(uri).body(dto); //resposta 201
     }
 
     @PutMapping(value = "/{id}")
@@ -44,4 +44,9 @@ public class CategoryResource {
         return ResponseEntity.ok().body(dto);
     }
 
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<CategoryDTO> delete(@PathVariable Long id) {
+         service.delete(id);
+         return ResponseEntity.noContent().build(); //resposta 204
+    }
 }
