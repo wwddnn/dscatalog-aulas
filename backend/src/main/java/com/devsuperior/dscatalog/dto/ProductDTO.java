@@ -96,7 +96,7 @@ public class ProductDTO {
         this.date = date;
     }
 
-    public List<CategoryDTO> getCategories() { //para colecoes somente o Get
+    public List<CategoryDTO> getCategories() { //para colecoes somente o Get //para acessar a colecao categories
         return categories;
     }
 

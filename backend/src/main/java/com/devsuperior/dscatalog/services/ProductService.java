@@ -1,7 +1,10 @@
 package com.devsuperior.dscatalog.services;
 
+import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.dto.ProductDTO;
+import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
+import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
 import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -19,26 +22,30 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
+
     @Autowired
     private ProductRepository repository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true) //usamos PageRequest que ja tinhamos criado na classe Category Resource
     public Page<ProductDTO> findAllPaged(PageRequest pageRequest) {
         Page<Product> list = repository.findAll(pageRequest);
-        return list.map(x -> new ProductDTO(x));
+        return list.map(x -> new ProductDTO(x));//uso o construtor so do produto pra nao ficar pesado, sem category
     }
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
         Optional<Product> obj = repository.findById(id);
         Product entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-        return new ProductDTO(entity, entity.getCategories());
+        return new ProductDTO(entity, entity.getCategories());//busco produto e category, pois traz nesse metodo so 1 id por vez
     }
 
     @Transactional
     public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product(); //crio uma entidade no banco, e vou atribuir o valor do dto para ela
-        //entity.setName(dto.getName());
+        copyDtoToEntity(dto, entity); //metodo novo criado para passar o dto pra entidade.
         entity = repository.save(entity); //para salvar essa entidade ja com os novos dados, no banco
         return new ProductDTO(entity);
     }
@@ -47,7 +54,7 @@ public class ProductService {
     public ProductDTO update(Long id, ProductDTO dto) {
         try {
             Product entity = repository.getReferenceById(id); //metodo getReferenceById() nao toca no banco de dados
-            //entity.setName(dto.getName());
+            copyDtoToEntity(dto, entity);//metodo novo criado para passar o dto pra entidade.
             entity = repository.save(entity); // agora sim estou salvando a entidade com os dados novos no banco de dados
             return new ProductDTO(entity);
         }
@@ -66,6 +73,21 @@ public class ProductService {
         }
         catch (DataIntegrityViolationException e) { //tentar apagar algo que comprometa a integridade do banco, lança essa exceção
             throw new DatabaseException("Falha de integridade referencial"); //criar a exceção DatabaseException dentro do service exceptions
+        }
+    }
+
+    private void copyDtoToEntity(ProductDTO dto, Product entity) { //metodo privado, so essa classe usa
+        //o id nao troca na hora de inicializar e nao informa na hora de inserir
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setPrice(dto.getPrice());
+        entity.setImgUrl(dto.getImgUrl());
+        entity.setDate(dto.getDate());
+
+        entity.getCategories().clear();
+        for(CategoryDTO catDto : dto.getCategories()) {
+            Category category = categoryRepository.getReferenceById(catDto.getId());
+            entity.getCategories().add(category);
         }
     }
 
