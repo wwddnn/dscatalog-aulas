@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.Objects;
 
+//link github do projeto do professor https://github.com/devsuperior/dscatalog-resources/tree/master/backend
+
 @Entity
 @Table(name = "tb_category")
 public class Category {

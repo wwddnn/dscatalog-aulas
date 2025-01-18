@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+//link github do projeto do professor https://github.com/devsuperior/dscatalog-resources/tree/master/backend
+
 @Entity
 @Table(name = "tb_product")
 public class Product {
