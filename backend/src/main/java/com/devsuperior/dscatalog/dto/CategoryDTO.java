@@ -15,7 +15,7 @@ public class CategoryDTO {
         this.name = name;
     }
 
-    public CategoryDTO(Category entity) {
+    public CategoryDTO(Category entity) { //construtor da entidade //vai passar os dados da entidade do banco para o dto
         id = entity.getId();
         name = entity.getName();
     }

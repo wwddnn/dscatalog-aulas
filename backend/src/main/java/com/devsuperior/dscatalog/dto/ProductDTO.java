@@ -2,7 +2,6 @@ package com.devsuperior.dscatalog.dto;
 
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
-import jakarta.persistence.Column;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class ProductDTO {
     private String imgUrl;
     private Instant date;
 
-    private List<CategoryDTO> categories = new ArrayList<>();
+    private List<CategoryDTO> categories = new ArrayList<>(); //adiciona a lista de categorias do CategoryDTO
 
     public ProductDTO() {
     }
@@ -32,7 +31,7 @@ public class ProductDTO {
         this.date = date;
     }
 
-    public ProductDTO(Product entity) {
+    public ProductDTO(Product entity) { //construtor da entidade //tras os dados da entidade do banco de dados para o dto //sobrecarga em relacao ao construtor acima
         id = entity.getId();
         name = entity.getName();
         description = entity.getDescription();
@@ -41,11 +40,9 @@ public class ProductDTO {
         date = entity.getDate();
     }
 
-    public ProductDTO(Product entity, Set<Category> categories) { //outro construtor que vai trazer os dados da category e colocar no productDTO //sobrecarga em relacao ao construtor acima
-        this(entity);
-        for(Category c : categories) {
-            categories.forEach(cat -> this.categories.add(new CategoryDTO(cat))); //funcao lambda //funcao de alta ordem //pode ser feito de varias maneiras
-        }
+    public ProductDTO(Product entity, Set<Category> categories) { //outro construtor que vai trazer os dados da category tambem e colocar no productDTO //sobrecarga em relacao ao construtor acima
+        this(entity); //tras o que ja foi feito no construtor anterior da entidade //colocar o this e depois entre parenteses o nome entity
+        categories.forEach(cat -> this.categories.add(new CategoryDTO(cat))); //funcao lambda //funcao de alta ordem //pode ser feito de varias maneiras
     }
 
     public Long getId() {
